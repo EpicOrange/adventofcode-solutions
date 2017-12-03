@@ -6,3 +6,8 @@ input1 = map (read . (:[])) "299171288753329525643213925696342571212445168199975
 solve1 :: [Int] -> Int
 solve1 = sum . (\i -> zipWith f i (tail i ++ [head i]))
   where f l r = if l == r then l else 0
+
+solve1' :: [Int] -> Int
+solve1' = sum . (\i -> zipWith f i $ cut i)
+  where f l r = if l == r then l else 0
+        cut xs = let (l, r) = splitAt (length xs `div` 2) xs in r ++ l
