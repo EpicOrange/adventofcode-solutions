@@ -1,5 +1,7 @@
 module Problem2 where
 
+import Data.List (find, sort)
+
 input2 :: [[Int]]
 input2 = map (map read . words) [
   "5806 6444  1281  38  267 1835  223 4912  5995  230 4395  2986  6048  4719  216 1201",
@@ -21,3 +23,9 @@ input2 = map (map read . words) [
 
 solve2 :: [[Int]] -> Int
 solve2 = sum . map (\xs -> maximum xs - minimum xs)
+
+solve2' :: [[Int]] -> Int
+solve2' = sum . map (f . sort)
+  where f (x:xs) = case find ((==0) . (`mod` x)) xs of
+            Nothing -> f xs
+            Just v  -> v `div` x
