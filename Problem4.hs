@@ -2,18 +2,13 @@ module Problem4 where
 
 import Data.List (sort, find)
 
-solve4 :: [[String]] -> Int
-solve4 = sum . map f
+solve4, solve4' :: [[String]] -> Int
+solve4 = length . filter (\xs -> xs == nub xs)
 
 solve4' :: [[String]] -> Int
 solve4' = solve4 . map (map sort)
 
-f :: [String] -> Int
-f []     = 1
-f (x:xs) = case find (==x) xs of
-  Nothing -> f xs
-  Just _ -> 0
-
+input4 :: [[String]]
 input4 = map words [
   "vxjtwn vjnxtw sxibvv mmws wjvtxn icawnd rprh",
   "fhaa qwy vqbq gsswej lxr yzl wakcige mwjrl",

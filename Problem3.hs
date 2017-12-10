@@ -10,28 +10,17 @@ rotate = transpose . reverse
 input3 :: Int
 input3 = 325489
 
-solve3 :: Int -> Int
-solve3 i = 
-  let n = fromJust . find ((>i) . (^2)) $ iterate (+2) 1 -- n^2 = first odd square >i
-      r = n `div` 2 -- radius of square
-      f = abs . (r-) . (`mod` n) -- the function f(d) = |r - (d%2r)|
-  -- solution is on the square with radius r
-  -- distance is r + (distance from side midpoint to corner)
-  in r + f (n^2 - i)
+solve3, solve3' :: Int -> Int
+solve3 i = r + d
+  where n = head . dropWhile ((<=i) . (^2)) $ iterate (+2) 1
+        r = n `div` 2
+        x = (n^2 - i) `mod` n
+        d = abs $ r - x
 
-solve3' :: Int -> Int
-solve3' i = f [[1], [1]]
-  where f !mat@(a:b:xs)
-          | head a > i          = head a -- we're done
-          | length b > length a =
-              -- calculate next element of the spiral
-              --  val:[26] <-- a
-              --[2   1 25] <-- b
-              -- 4   1 22
-              -- 5  10 11
-              let val = head a + (sum . take 3 . drop (length a - 1) . reverse $ b) in
-              f $ (val:a):b:xs
-          | otherwise           =
-              -- row a is filled so rotate. first element of new row = head a + head b
-              f $ [head a + head b]:(rotate mat)
-
+solve3' i = head . dropWhile (<=i) . head . until (\(a:_) -> last a >= i) update $ [[1]]
+  where update :: [[Int]] -> [[Int]]
+        update mat = (makeRow r):mat'
+          where mat'@(r:_) = (reverse . transpose) mat
+        makeRow :: [Int] -> [Int]
+        makeRow xs = scanl1 (+) $ zipWith3 add3 (0:xs) xs (tail xs ++ [0])
+          where add3 a b c = a+b+c
