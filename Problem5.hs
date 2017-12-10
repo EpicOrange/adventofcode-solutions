@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns, ScopedTypeVariables #-}
-
 module Problem5 where
 
 import Data.List (unfoldr)
